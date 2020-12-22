@@ -1,0 +1,23 @@
+#include "rotatenode.h"
+
+RotateNode::RotateNode(float angle)
+    : Node(), angle(angle)
+{
+    this->name = QString('RotNode');
+}
+
+float RotateNode::getAngle() {
+    return this->angle;
+}
+
+glm::mat3 RotateNode::transform() {
+    glm::mat3 rotate = glm::mat3(1);
+    float angleRad = this->angle * (M_PI/180);
+    rotate[0][0] = cos(angleRad);
+    rotate[0][1] = sin(angleRad);
+    rotate[1][0] = -1 * sin(angleRad);
+    rotate[1][1] = cos(angleRad);
+    return rotate;
+}
+
+RotateNode::~RotateNode() {}

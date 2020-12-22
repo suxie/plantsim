@@ -1,0 +1,108 @@
+#include "mainwindow.h"
+#include <ui_mainwindow.h>
+#include <node.h>
+#include <scalenode.h>
+#include <translatenode.h>
+#include <rotatenode.h>
+#include <mygl.h>
+#include <iostream>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow), curr(nullptr)
+{
+    ui->setupUi(this);
+    ui->mygl->setFocus();
+    connect(ui->mygl, SIGNAL(sendRoot(QTreeWidgetItem*)),
+            this, SLOT(slot_getRoot(QTreeWidgetItem*)));
+    connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+            this, SLOT(slot_receiveItemClicked(QTreeWidgetItem*)));
+    connect(ui->transNode, SIGNAL(clicked(bool)), this, SLOT(slot_newTrans(bool)));
+    connect(ui->scaleNode, SIGNAL(clicked(bool)), this, SLOT(slot_newScale(bool)));
+    connect(ui->rotNode, SIGNAL(clicked(bool)), this, SLOT(slot_newRot(bool)));
+    connect(ui->addGeom, SIGNAL(clicked(bool)), this, SLOT(slot_addGeom(bool)));
+    connect(ui->transX, SIGNAL(valueChanged(int)), this, SLOT(slot_transX(int)));
+    connect(ui->transY, SIGNAL(valueChanged(int)), this, SLOT(slot_transY(int)));
+    connect(ui->scaleX, SIGNAL(valueChanged(int)), this, SLOT(slot_scaleX(int)));
+    connect(ui->scaleY, SIGNAL(valueChanged(int)), this, SLOT(slot_scaleY(int)));
+    connect(ui->rotAng, SIGNAL(valueChanged(int)), this, SLOT(slot_rotAng(int)));
+}
+
+void MainWindow::slot_getRoot(QTreeWidgetItem* root) {
+    this->curr = (Node*)root;
+    ui->treeWidget->addTopLevelItem(root);
+}
+
+void MainWindow::slot_receiveItemClicked(QTreeWidgetItem* curr) {
+    this->curr = (Node*)curr;
+    std::cout << curr->getName() << std::endl;
+    //ui->scaleX = textFromValue(dynamic_cast<Node*>(curr)->);
+}
+
+void MainWindow::slot_newTrans(bool clicked) {
+    if (clicked) {
+        curr->addChild(mkU<TranslateNode>(0, 0));
+    }
+}
+
+void MainWindow::slot_newScale(bool clicked) {
+    if (clicked) {
+        curr->addChild(mkU<ScaleNode>(0, 0));
+    }
+}
+
+void MainWindow::slot_newRot(bool clicked) {
+    if (clicked) {
+        curr->addChild(mkU<RotateNode>(0));
+    }
+}
+
+void MainWindow::slot_addGeom(bool clicked) {
+    if (clicked) {
+        ui->mygl->addGeom(curr);
+    }
+}
+
+void MainWindow::slot_transX(int val) {
+    Node* n = static_cast<Node*>(curr);
+    glm::mat3 t = n->transform();
+    t[2][0] = val;
+}
+
+void MainWindow::slot_transY(int val) {
+    Node* n = static_cast<Node*>(curr);
+    glm::mat3 t = n->transform();
+    t[2][1] = val;
+}
+
+void MainWindow::slot_scaleX(int val) {
+    Node* n = static_cast<Node*>(curr);
+    glm::mat3 t = n->transform();
+    t[0][0] = val;
+}
+
+void MainWindow::slot_scaleY(int val) {
+    Node* n = static_cast<Node*>(curr);
+    glm::mat3 t = n->transform();
+    t[1][1] = val;
+}
+
+void MainWindow::slot_rotAng(int val) {
+    Node* n = static_cast<Node*>(curr);
+    glm::mat3 t = n->transform();
+    float angle = val * (M_PI/180);
+    t[0][0] = cos(angle);
+    t[0][1] = sin(angle);
+    t[1][0] = -1 * sin(angle);
+    t[1][1] = cos(angle);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    QApplication::exit();
+}

@@ -1,0 +1,20 @@
+#include "translatenode.h"
+#include "include/glm/detail/type_mat3x3.hpp"
+
+TranslateNode::TranslateNode(float x, float y)
+    : x(x), y(y)
+{}
+
+float TranslateNode::getX() {
+    return this->x;
+}
+
+float TranslateNode::getY() {
+    return this->y;
+}
+
+glm::mat3 TranslateNode::transform() {
+    glm::mat3 matrix = tmat3x3::tmat3x3();
+}
+
+TranslateNode::~TranslateNode() {}
