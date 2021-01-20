@@ -29,7 +29,7 @@ Plants can be affected by phototropism (where the light in the scene is) and sur
 
 ![](phototropism.gif)
 
-**PHOTOTROPSIM, SURFACE ADAPTATION**
+**PHOTOTROPISM, SURFACE ADAPTATION**
 
 ![](surface_adaptation.gif)
 
