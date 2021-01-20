@@ -66,6 +66,7 @@ Phototropism: toggle phototropism
 - Exterior Band Voxels: affects input geometry SDF function range
 
 **SEEDS**
+
 This autopopulates with seed positions after the user clicks on the scene to place points, as shown in some of the earlier Tool Behavior screengrabs. 
 
 **VINES**
